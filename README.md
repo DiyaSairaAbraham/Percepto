@@ -1,30 +1,37 @@
 # Percepto
-#Mini Project done in sxth Semester of B.Tech in Robotics and Automation
-# First we use google Colab to train the CNN model using python3, YOLOV8 and Tesla T4 GPU
-#install ultralytics , import YOLO and check for its version using orint command
+## Mini Project done in sxth Semester of B.Tech in Robotics and Automation
+##First we use google Colab to train the CNN model using python3, YOLOV8 and Tesla T4 GPU
+install ultralytics , import YOLO and check for its version using print command
 
+```
 !pip install ultralytics
 from ultralytics import YOLO
-print(YOLO)  
+print(YOLO) 
+``` 
+##prepare the dataset from Roboflow by following the steps :
+###Sign in to Roboflow -> Search for drone, aeroplane, birds and other aerial objects' images for object detection in the universe section -> Choose desired dataset and click on fork dataset -> Crete new version -> download the version in zip  format 
 
-#prepare the dataset from Roboflow by following the steps : Sign in to Roboflow -> Search for drone, aeroplane, birds and other aerial objects' images for object detection in the universe section -> Choose desired dataset and click on fork dataset -> Crete new version -> download the version in zip  format 
-# the downloaded zip file should be extracted and arranged in a folder named [dataset name] in the given order :
-#dataset --->images, labels ->test,train,val that is dataset must contain two folders namely images and labels and each of these folders must contain test,train and val folders for corresponding images and labels .Test folder is optional but train and val is required.
-#Zip your dataset folder
+##the downloaded zip file should be extracted and arranged in a folder named [dataset name] in the given order :
+###dataset --->images, labels ->test,train,val that is dataset must contain two folders namely images and labels and each of these folders must contain test,train and val folders for corresponding images and labels .Test folder is optional but train and val is required.
 
-# Upload our datset folder to Colab as a zip file and unzip the same
+##Zip your dataset folder
 
+## Upload our datset folder to Colab as a zip file and unzip the same
+
+```
 from google.colab import files
 files.upload()
 !unzip A1dataset.zip -d /content/dataset
+```
 
-# check if the datsets are there by choosing the first few files
-
+##check if the datsets are there by choosing the first few files
+```
 !ls /content/dataset/A1dataset/images/train |head
 !ls /content/dataset/A1dataset/labels/train |head
+```
 
-# create the yaml file
-
+##create the yaml file
+```
 with open('/content/data.yaml', 'w') as f:
     f.write("""
 train: /content/dataset/A1dataset/images/train
@@ -32,18 +39,19 @@ val: /content/dataset/A1dataset/images/val
 nc: 3
 names: ['drone','aeroplane','bird',]
 """)
+```
+##check if the yaml file has all the necessary classes
 
-#check if the yaml file has all the necessary classes
-
+```
 !cat data.yaml
-
-# mount the data.yml file and the subsequent training to google drive so as to not lose weights and save progress of training in case of any disconnection to GPU
-
+```
+##mount the data.yml file and the subsequent training to google drive so as to not lose weights and save progress of training in case of any disconnection to GPU
+```
 from google.colab import drive
 drive.mount('/content/drive')
-
-#train the dataset using YOLOv8
-
+```
+##train the dataset using YOLOv8
+```
 from ultralytics import YOLO
 model = YOLO("yolov8n.pt")
 model.train(
@@ -54,19 +62,22 @@ model.train(
     device=0,
     project="/content/drive/MyDrive/percepto_runs"
 )
+```
 
-#go to drive and download the best.pt under the training to your device 
-# Open VS Code, open a folder [say ' percepto'] with our best.pt file source it to python environment and install the libraries as follows:
+##go to drive and download the best.pt under the training to your device 
 
+##Open VS Code, open a folder [say ' percepto'] with our best.pt file source it to python environment and install the libraries as follows:
+
+```
 python -m venv .venv #sourcing python environment in terminal
 .venv/Scripts/activate.ps1 # activating the environment
 pip install ultalytics #for accessing YOLO models
 pip install pyserial # providing backend for python
 pip install lapx # for tracking objects in real time
 pip install opencv -python # for computer vision applications like accessing webcam, frame processing,etc..
-
-#create a python file [ say 'aerial_tracking.py'] inside percepto folder for tracking , detection and classification of aerial objects using the codes :
-'''
+```
+##create a python file [ say 'aerial_tracking.py'] inside percepto folder for tracking , detection and classification of aerial objects using the codes :
+```
 import cv2
 from ultralytics import YOLO
 import serial
@@ -184,10 +195,10 @@ while True:
 cap.release()
 cv2.destroyAllWindows()
 arduino.close()
-'''
-#save the same
-#assemble the pantilt mechanism for tracking and in Arduino IDE after choosing arduino uno board and corresponding port add the following code, upload to arduino (connected to pan-tilt servos) and close Arduino IDE after saving the sketch. Without closing Arduino IDE , VS code will show error during its running.
-
+```
+##save the same
+##assemble the pantilt mechanism for tracking and in Arduino IDE after choosing arduino uno board and corresponding port add the following code, upload to arduino (connected to pan-tilt servos) and close Arduino IDE after saving the sketch. Without closing Arduino IDE , VS code will show error during its running.
+```
 #include <Servo.h>
 
 Servo panServo;
@@ -222,10 +233,10 @@ void loop() {
     }
   }
 }
-
-# close Arduino IDE and navigate back to VS code and run aerial_tracking.py
-# adjust offsets and inversion of servos using python codes which will be uploaded later once I solve it :)
-# Hardware connections : use bread board 
+```
+##close Arduino IDE and navigate back to VS code and run aerial_tracking.py
+##adjust offsets and inversion of servos using python codes which will be uploaded later once I solve it :)
+##Hardware connections : use bread board 
 
 Paan and tilt servo : 
 *Brown wire to GND of UNO 
